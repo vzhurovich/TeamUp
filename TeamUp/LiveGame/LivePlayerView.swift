@@ -26,25 +26,16 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
     @IBAction func tapGesture(_ sender: Any) {
         print("---TapGesture")
     }
-    //WatchProtocol
+    // MARK: WatchProtocol
     var startTime = TimeInterval()
     var timeFromStart: TimeInterval?
     var periodTimeInterval: TimeInterval?
     var triggerTimeIntervals: [UInt16] = [0,3*60 + 45,6*60]//[180]
     var doActionOnTime: ((UInt16)->())?
     
-    //DraggableViewProtocol
+    // MARK: DraggableViewProtocol
     var allowedAreaFrame: CGRect?
     var lastCenterPoint: CGPoint?
-    
-//    func cancelMovement() {
-//        guard let lastCenterPoint = lastCenterPoint else { return }
-//        self.center = lastCenterPoint
-//    }
-//    
-//    func movementFinishedSuccessfully() {
-//        lastCenterPoint = self.center
-//    }
     
     init(livePlayer: LivePlayerProtocol) {
         self.livePlayer = livePlayer
@@ -60,68 +51,9 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
         fromNib()
         setupAppearance()
     }
-
-    public func exchangeWith(playerView: inout LivePlayerView) -> Bool {
-        guard self.livePlayer.isOnBench != playerView.livePlayer.isOnBench else { return false }
-        setBenchState(isOnBench: !self.livePlayer.isOnBench)
-        playerView.setBenchState(isOnBench: !playerView.livePlayer.isOnBench)
-
-        
-        UIView.animate(withDuration: 0.5, animations: {[weak self, playerView] in
-            guard let strongSelf = self else { return }
-            strongSelf.center = playerView.lastCenterPoint!
-            playerView.center = strongSelf.lastCenterPoint!
-        })
-        
-        self.lastCenterPoint = playerView.lastCenterPoint
-        playerView.updateLastCenterPoint()
-
-        resetState()
-        playerView.resetState()
-        return true
-    }
-    
-    @discardableResult
-    public func moved(toBench: Bool) -> Bool {
-        guard self.livePlayer.isOnBench != toBench else { return false }
-        setBenchState(isOnBench: toBench)
-        resetState()
-        return true
-    }
-    
-    public func resetState() {
-        resetTimer()
-        currentETime = 0
-        updateTime()
-        updateFaceImage(index: 0)
-    }
     
     public func updateElapsedTime() {
         currentETime = currentElapsedTime()
-    }
-    
-    private func setBenchState(isOnBench: Bool) {
-        if isOnBench && !self.livePlayer.isOnBench {
-            self.livePlayer.totalTimeOnField += currentETime
-        }
-        self.livePlayer.isOnBench = isOnBench
-    }
-    
-    private func setupAppearance() {
-        bodyView.layer.cornerRadius = 5.0
-        timeLabel.layer.masksToBounds = true
-        timeLabel.layer.cornerRadius = 5.0
-        nameLabel.text = livePlayer.nickName
-        updateFaceImage(index: 0)
-        doActionOnTime = { [weak self] ( timeInterval ) in
-            guard let strongSelf = self, let indx = strongSelf.triggerTimeIntervals.index(of: timeInterval) else { return }
-            strongSelf.updateFaceImage(index: indx)
-        }
-    }
-    
-    private func updateFaceImage(index: Int) {
-        let imageName = self.livePlayer.isOnBench ? self.benchPlayerFaces[index] : self.fieldPlayerFaces[index]
-        self.faceImageView.image = UIImage(named:imageName)
     }
     
     //WatchProtocol
@@ -156,4 +88,66 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
         }
         onCompletion(.succeededLivePlayer)
     }
+    
+    //Mark: Bench helpers
+    private func exchangeWith(playerView: inout LivePlayerView) -> Bool {
+        guard self.livePlayer.isOnBench != playerView.livePlayer.isOnBench else { return false }
+        setBenchState(isOnBench: !self.livePlayer.isOnBench)
+        playerView.setBenchState(isOnBench: !playerView.livePlayer.isOnBench)
+        
+        
+        UIView.animate(withDuration: 0.5, animations: {[weak self, playerView] in
+            guard let strongSelf = self else { return }
+            strongSelf.center = playerView.lastCenterPoint!
+            playerView.center = strongSelf.lastCenterPoint!
+        })
+        
+        self.lastCenterPoint = playerView.lastCenterPoint
+        playerView.updateLastCenterPoint()
+        
+        resetState()
+        playerView.resetState()
+        return true
+    }
+    
+    @discardableResult
+    public func moved(toBench: Bool) -> Bool {
+        guard self.livePlayer.isOnBench != toBench else { return false }
+        setBenchState(isOnBench: toBench)
+        resetState()
+        return true
+    }
+    
+    private func setBenchState(isOnBench: Bool) {
+        if isOnBench && !self.livePlayer.isOnBench {
+            self.livePlayer.totalTimeOnField += currentETime
+        }
+        self.livePlayer.isOnBench = isOnBench
+    }
+    
+    private func resetState() {
+        resetTimer()
+        currentETime = 0
+        updateTime()
+        updateFaceImage(index: 0)
+    }
+    
+    //Mark: Helpers
+    private func setupAppearance() {
+        bodyView.layer.cornerRadius = 5.0
+        timeLabel.layer.masksToBounds = true
+        timeLabel.layer.cornerRadius = 5.0
+        nameLabel.text = livePlayer.nickName
+        updateFaceImage(index: 0)
+        doActionOnTime = { [weak self] ( timeInterval ) in
+            guard let strongSelf = self, let indx = strongSelf.triggerTimeIntervals.index(of: timeInterval) else { return }
+            strongSelf.updateFaceImage(index: indx)
+        }
+    }
+    
+    private func updateFaceImage(index: Int) {
+        let imageName = self.livePlayer.isOnBench ? self.benchPlayerFaces[index] : self.fieldPlayerFaces[index]
+        self.faceImageView.image = UIImage(named:imageName)
+    }
+
 }

@@ -56,7 +56,32 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
     var ourGoals: UInt8 = 0
     var theirGoals: UInt8 = 0
     
-    // Timer
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(LiveGameViewController.draggedView(_:)))
+        
+        // Ball view
+        setupBallView(panGesture: panGesture)
+        
+        // Players Views
+        addPlayersView(livePlayers: getTestLivePlayers())
+        
+        // Bench View
+        benchView.frame = benchZone
+        benchView.layer.cornerRadius = 5.0
+        
+        timeButton.setTitle(timeIntervalToString(time: periodTimeInterval!), for: .normal)
+        updateScore()
+        
+        // Period finished
+        doActionOnTime = { [weak self] (_) in
+            guard let strongSelf = self else { return }
+            strongSelf.pauseWatchTimer()
+        }
+    }
+
+    // Mark: Period & Time buttons
     var watchTimer: Timer?
     @IBAction func periodButtonPressed(_ sender: Any) {
         if let periodLabel = periodButton.titleLabel, periodLabel.text == "1", let timeButtonLabel = timeButton.titleLabel, timeButtonLabel.text == "00:00", watchTimer == nil {
@@ -79,51 +104,14 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(LiveGameViewController.draggedView(_:)))
-        
-        // Ball view
-        ballImageView.isUserInteractionEnabled = true
-        ballImageView.addGestureRecognizer(panGesture)
-        let size = CGSize(width: self.view.frame.width - 31 - 31, height: self.view.frame.height - 100 - 74)
-        ballImageView.allowedAreaFrame = CGRect(origin: fieldUIImageView.frame.origin, size: size)
-        ballImageView.center = fieldCenter
-        ballImageView.updateLastCenterPoint()
-        
-        // Players Views
-        addPlayersView(livePlayers: getTestLivePlayers())
-        print("Frame = \(self.view.frame)")
-        print("fieldUIImageView = \(fieldUIImageView.frame)")
-        print("ballImageView.allowedAreaFrame = \(String(describing: ballImageView.allowedAreaFrame))")
-        
-        // Bench View
-        benchView.frame = benchZone
-        benchView.layer.cornerRadius = 5.0
-        
-        timeButton.setTitle(timeIntervalToString(time: periodTimeInterval!), for: .normal)
-        updateScore()
-        
-        // Period finished
-        doActionOnTime = { [weak self] (_) in
-            guard let strongSelf = self else { return }
-            strongSelf.pauseWatchTimer()
-        }
-    }
-
+    //Mark: Drag
     @objc func draggedView(_ sender:UIPanGestureRecognizer){
         guard let draggedView = sender.view else { return }
         guard let draggableView = draggedView as? DraggableViewProtocol else { return }
      
         switch sender.state {
-        case .possible:
+        case .possible,.began:
             self.view.bringSubview(toFront: draggedView)
-        case .began:
-            self.view.bringSubview(toFront: draggedView)
-//            if let livePlayerView = draggedView as? LivePlayerView {
-//                livePlayerView.faceImageView.isHighlighted = true
-//            }
         case .ended:
             if let underLivePlayerView = getPlayerUnderView(draggedView) {
                 draggableView.dragEndedOnPlayer(player: underLivePlayerView, onCompletion: { [weak self] status in
@@ -142,7 +130,7 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
             let newCenterPoint = CGPoint(x: draggedView.center.x + translation.x, y: draggedView.center.y + translation.y)
             if draggableView.isAllowedMovementTo(newCenterPoint: newCenterPoint) {
                 draggedView.center = newCenterPoint
-                print ("*** newCenterPoint = \(newCenterPoint)")
+//                print ("*** newCenterPoint = \(newCenterPoint)")
                 sender.setTranslation(CGPoint.zero, in: self.view)
             }
         }
@@ -169,39 +157,21 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
         return panGeaasureRecognizers.keys.filter{ $0.view != draggableView}.flatMap{ $0.view as? LivePlayerView}.first(where: {$0.frame.contains(draggableView.center)})
     }
     
-    private func getPlayerAtPosition(centerPoint: CGPoint) -> LivePlayerView? {
-        return panGeaasureRecognizers.keys.flatMap{ $0.view as? LivePlayerView}.first(where: {$0.frame.contains(centerPoint)})
+    private func setupBallView(panGesture: UIPanGestureRecognizer) {
+        
+        ballImageView.isUserInteractionEnabled = true
+        ballImageView.addGestureRecognizer(panGesture)
+        let size = CGSize(width: self.view.frame.width - 31 - 31, height: self.view.frame.height - 100 - 74)
+        ballImageView.allowedAreaFrame = CGRect(origin: fieldUIImageView.frame.origin, size: size)
+        ballImageView.center = fieldCenter
+        ballImageView.updateLastCenterPoint()
+        ballImageView.fieldCenter = fieldCenter
+        ballImageView.ourGoalCenter = ourGoalCenter
+        ballImageView.theirGoalCenter = theirGoalCenter
     }
-    
-    private func addPlayersView(livePlayers: [LivePlayerProtocol]) {
-        for player in livePlayers {
-            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(LiveGameViewController.draggedView(_:)))
-            let playerView = LivePlayerView(livePlayer: player)
-            
-            playerView.frame = frameFor(livePlayer: player)
-                //CGRect(origin: CGPoint(x: xPosition, y: 690), size: CGSize(width: 76, height: 76))
-            playerView.isUserInteractionEnabled = true
-            
-            let size = CGSize(width: self.view.frame.width - 31 - 31, height: self.view.frame.height - 100 - 35)
-            playerView.allowedAreaFrame = CGRect(origin: fieldUIImageView.frame.origin, size: size)
-            let fieldSize = CGSize(width: self.view.frame.width - 31 - 31, height: self.view.frame.height - 100 - 74)
-            playerView.fieldZone = CGRect(origin: fieldUIImageView.frame.origin, size: fieldSize)
-            playerView.updateLastCenterPoint()
-            playerView.addGestureRecognizer(panGesture)
-            self.view.addSubview(playerView)
-            panGeaasureRecognizers[panGesture] = player
-        }
-    }
-    
-    private func frameFor(livePlayer: LivePlayerProtocol) -> CGRect {
-        let origin = livePlayer.isOnBench ? nextBenchOrigin() : livePlayer.postition.origin()
-        return CGRect(origin: origin, size: CGSize(width: 76, height: 76))
-    }
-    
-    private func nextBenchOrigin() -> CGPoint {
-        xBenchPosition  += 80
-        return CGPoint(x: xBenchPosition, y: yBenchPosition)
-    }
+//    private func getPlayerAtPosition(centerPoint: CGPoint) -> LivePlayerView? {
+//        return panGeaasureRecognizers.keys.flatMap{ $0.view as? LivePlayerView}.first(where: {$0.frame.contains(centerPoint)})
+//    }
     
     private func sortBench() {
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
@@ -215,35 +185,6 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
             }
         })
 
-    }
-    
-    // MARK: Test Data
-    private func getTestLivePlayers() -> [LivePlayerProtocol] {
-        var livePlayers: [LivePlayer] = []
-        livePlayers.append(LivePlayer(firstName: "Dima", secondName: "Dima", nickName: "Dimas", isFullTimer: true, postition: .Keeper, isOnBench: false, totalTimeOnField: 0))
-        // Right Deff
-        livePlayers.append(LivePlayer(firstName: "Vitaliy", secondName: "Fedonkin", nickName: "Vitaliy", isFullTimer: true, postition: .RightDef, isOnBench: false, totalTimeOnField: 0))
-        livePlayers.append(LivePlayer(firstName: "Dima", secondName: "Kabish", nickName: "Dima", isFullTimer: true, postition: .RightDef, isOnBench: true, totalTimeOnField: 0))
-        
-        // Left Deff
-        livePlayers.append(LivePlayer(firstName: "Yura", secondName: "Burkanov", nickName: "Yura", isFullTimer: true, postition: .LeftDef, isOnBench: false, totalTimeOnField: 0))
-        livePlayers.append(LivePlayer(firstName: "Evgeny", secondName: "Melikhov", nickName: "ZhenyaM", isFullTimer: true, postition: .LeftDef, isOnBench: true, totalTimeOnField: 0))
-
-        // Center
-        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Petrov", nickName: "SeregaP", isFullTimer: true, postition: .CenterForward, isOnBench: false, totalTimeOnField: 0))
-        livePlayers.append(LivePlayer(firstName: "Oleg", secondName: "Pauchkov", nickName: "Oleg", isFullTimer: true, postition: .CenterForward, isOnBench: true, totalTimeOnField: 0))
-        
-        // Right Forward
-        livePlayers.append(LivePlayer(firstName: "Vladimir", secondName: "Zhurovich", nickName: "Volodya", isFullTimer: true, postition: .RightForward, isOnBench: false, totalTimeOnField: 0))
-        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Balabanov", nickName: "SeregaB", isFullTimer: true, postition: .RightForward, isOnBench: true, totalTimeOnField: 0))
-        
-        // Left Forward
-        livePlayers.append(LivePlayer(firstName: "Leonid", secondName: "Konyaev", nickName: "Lenya", isFullTimer: true, postition: .LeftForward, isOnBench: false, totalTimeOnField: 0))
-        livePlayers.append(LivePlayer(firstName: "Genghis", secondName: "Karimov", nickName: "Genghis", isFullTimer: true, postition: .LeftForward, isOnBench: true, totalTimeOnField: 0))
-
-//        livePlayers.append(LivePlayer(firstName: "Yevgenie", secondName: "Goldenberg", nickName: "Zhenya", isFullTimer: true, postition: .CenterForward, isOnBench: false))
-        
-        return livePlayers
     }
     
     // MARK: Score
@@ -270,7 +211,6 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
         panGeaasureRecognizers.keys.flatMap{ $0.view as? LivePlayerView}.forEach{ $0.resumeTimer() }
         
         watchTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
-        
     }
     
     func stopTimer() {
@@ -282,6 +222,64 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
         panGeaasureRecognizers.keys.flatMap{ $0.view as? LivePlayerView}.forEach{ $0.updateElapsedTime()
             $0.updateTime()}
         timeButton.setTitle(timeText(),for: .normal)
+    }
+    
+    // MARK: Test Data
+    private func addPlayersView(livePlayers: [LivePlayerProtocol]) {
+        for player in livePlayers {
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(LiveGameViewController.draggedView(_:)))
+            let playerView = LivePlayerView(livePlayer: player)
+            
+            playerView.frame = frameFor(livePlayer: player)
+            //CGRect(origin: CGPoint(x: xPosition, y: 690), size: CGSize(width: 76, height: 76))
+            playerView.isUserInteractionEnabled = true
+            
+            let size = CGSize(width: self.view.frame.width - 31 - 31, height: self.view.frame.height - 100 - 35)
+            playerView.allowedAreaFrame = CGRect(origin: fieldUIImageView.frame.origin, size: size)
+            let fieldSize = CGSize(width: self.view.frame.width - 31 - 31, height: self.view.frame.height - 100 - 74)
+            playerView.fieldZone = CGRect(origin: fieldUIImageView.frame.origin, size: fieldSize)
+            playerView.updateLastCenterPoint()
+            playerView.addGestureRecognizer(panGesture)
+            self.view.addSubview(playerView)
+            panGeaasureRecognizers[panGesture] = player
+        }
+    }
+    
+    private func frameFor(livePlayer: LivePlayerProtocol) -> CGRect {
+        let origin = livePlayer.isOnBench ? nextBenchOrigin() : livePlayer.postition.origin()
+        return CGRect(origin: origin, size: CGSize(width: 76, height: 76))
+    }
+    
+    private func nextBenchOrigin() -> CGPoint {
+        xBenchPosition  += 80
+        return CGPoint(x: xBenchPosition, y: yBenchPosition)
+    }
+    private func getTestLivePlayers() -> [LivePlayerProtocol] {
+        var livePlayers: [LivePlayer] = []
+        livePlayers.append(LivePlayer(firstName: "Dima", secondName: "Dima", nickName: "Dimas", isFullTimer: true, postition: .Keeper, isOnBench: false, totalTimeOnField: 0))
+        // Right Deff
+        livePlayers.append(LivePlayer(firstName: "Vitaliy", secondName: "Fedonkin", nickName: "Vitaliy", isFullTimer: true, postition: .RightDef, isOnBench: false, totalTimeOnField: 0))
+        livePlayers.append(LivePlayer(firstName: "Dima", secondName: "Kabish", nickName: "Dima", isFullTimer: true, postition: .RightDef, isOnBench: true, totalTimeOnField: 0))
+        
+        // Left Deff
+        livePlayers.append(LivePlayer(firstName: "Yura", secondName: "Burkanov", nickName: "Yura", isFullTimer: true, postition: .LeftDef, isOnBench: false, totalTimeOnField: 0))
+        livePlayers.append(LivePlayer(firstName: "Evgeny", secondName: "Melikhov", nickName: "ZhenyaM", isFullTimer: true, postition: .LeftDef, isOnBench: true, totalTimeOnField: 0))
+        
+        // Center
+        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Petrov", nickName: "SeregaP", isFullTimer: true, postition: .CenterForward, isOnBench: false, totalTimeOnField: 0))
+        livePlayers.append(LivePlayer(firstName: "Oleg", secondName: "Pauchkov", nickName: "Oleg", isFullTimer: true, postition: .CenterForward, isOnBench: true, totalTimeOnField: 0))
+        
+        // Right Forward
+        livePlayers.append(LivePlayer(firstName: "Vladimir", secondName: "Zhurovich", nickName: "Volodya", isFullTimer: true, postition: .RightForward, isOnBench: false, totalTimeOnField: 0))
+        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Balabanov", nickName: "SeregaB", isFullTimer: true, postition: .RightForward, isOnBench: true, totalTimeOnField: 0))
+        
+        // Left Forward
+        livePlayers.append(LivePlayer(firstName: "Leonid", secondName: "Konyaev", nickName: "Lenya", isFullTimer: true, postition: .LeftForward, isOnBench: false, totalTimeOnField: 0))
+        livePlayers.append(LivePlayer(firstName: "Genghis", secondName: "Karimov", nickName: "Genghis", isFullTimer: true, postition: .LeftForward, isOnBench: true, totalTimeOnField: 0))
+        
+        //        livePlayers.append(LivePlayer(firstName: "Yevgenie", secondName: "Goldenberg", nickName: "Zhenya", isFullTimer: true, postition: .CenterForward, isOnBench: false))
+        
+        return livePlayers
     }
 }
 
