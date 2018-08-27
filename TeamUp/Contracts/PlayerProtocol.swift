@@ -13,7 +13,7 @@ public let xDef = 200
 public let xForward = 400
 public let yLeft = 200
 public let yCenter = 340
-public let yRight = 540
+public let yRight = 476
 public let yForwardOffset = 50
 
 public enum FieldPosition: Int {
@@ -40,7 +40,7 @@ public enum FieldPosition: Int {
         case .LeftForward:
             return CGPoint(x: xForward, y: yLeft - yForwardOffset)
         case .CenterForward:
-            return CGPoint(x: xForward, y: yCenter)
+            return CGPoint(x: xForward + 150, y: yCenter)
         }
     }
 }

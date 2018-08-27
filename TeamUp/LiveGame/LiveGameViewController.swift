@@ -42,13 +42,13 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
     }
     
     // Constats
-    private var xBenchPosition = -60
-    private let yBenchPosition = 690
+    private var xBenchPosition = -60-24
+    private let yBenchPosition = 680
     private let fieldCenter = CGPoint(x: 511, y: 400)
     private let theirGoalCenter = CGPoint(x: 975.5, y: 400)
     private let ourGoalCenter = CGPoint(x: 47, y: 400)
     private let ourGoalZone = CGRect(x: 66, y: 240, width: 134, height: 320)
-    private let benchZone = CGRect(x: 30, y: 698, width: 481, height: 66)
+    private let benchZone = CGRect(x: 30, y: 698, width: 581, height: 66)
     
     // WatchProtocol
     var startTime = TimeInterval()
@@ -138,7 +138,7 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
             let newCenterPoint = CGPoint(x: draggedView.center.x + translation.x, y: draggedView.center.y + translation.y)
             if draggableView.isAllowedMovementTo(newCenterPoint: newCenterPoint) {
                 draggedView.center = newCenterPoint
-//                print ("*** newCenterPoint = \(newCenterPoint)")
+                print ("*** newCenterPoint = \(newCenterPoint)")
                 sender.setTranslation(CGPoint.zero, in: self.view)
             }
         }
@@ -221,7 +221,7 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
             for  livePlayerView in sortedLivePlayersOnBench {
                 livePlayerView.center = CGPoint(x: xPos, y: 728)
                 livePlayerView.updateLastCenterPoint()
-                xPos += 80
+                xPos += (80 + 24)
             }
         })
 
@@ -294,11 +294,11 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
     
     private func frameFor(livePlayer: LivePlayerProtocol) -> CGRect {
         let origin = livePlayer.isOnBench ? nextBenchOrigin() : livePlayer.postition.origin()
-        return CGRect(origin: origin, size: CGSize(width: 76, height: 76))
+        return CGRect(origin: origin, size: CGSize(width: 100, height: 100))
     }
     
     private func nextBenchOrigin() -> CGPoint {
-        xBenchPosition  += 80
+        xBenchPosition  += (80 + 24)
         return CGPoint(x: xBenchPosition, y: yBenchPosition)
     }
     private func getTestLivePlayers() -> [LivePlayerProtocol] {

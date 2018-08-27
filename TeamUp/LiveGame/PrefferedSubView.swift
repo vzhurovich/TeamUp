@@ -13,6 +13,9 @@ class PrefferedSubView: UIView , UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var pickerView: UIPickerView!
     
     @IBOutlet weak var okButton: UIButton!
+    
+    @IBOutlet weak var pickerViewHeightConstraint: NSLayoutConstraint!
+    
     var onSelectCompletion: ((LivePlayerView,String) -> ())?
     private var arraySubs = ["FirstFamily3456","Petrov","Ivanov","⚽️"]
     private var touchedLivePlayerView:LivePlayerView?
@@ -37,6 +40,10 @@ class PrefferedSubView: UIView , UIPickerViewDelegate, UIPickerViewDataSource {
         arraySubs.append("⚽️")
         lastSelection = arraySubs.count > 2 ? 1 : 0
         pickerView.selectRow(lastSelection, inComponent: 0, animated: false)
+        
+        let heightOffset: CGFloat = arraySubs.count > 2 ? 0 : 30
+        self.pickerViewHeightConstraint.constant = 120 - heightOffset
+        self.frame = CGRect(x: self.frame.origin.x , y: self.frame.origin.y, width: self.frame.size.width, height: 150 - heightOffset)
         pickerView.reloadAllComponents()
     }
     
