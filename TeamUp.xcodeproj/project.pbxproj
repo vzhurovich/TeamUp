@@ -24,6 +24,9 @@
 		E7AD560621221B9C00604123 /* BallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AD560521221B9C00604123 /* BallView.swift */; };
 		E7AD560C2123EA3E00604123 /* ScoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AD560B2123EA3E00604123 /* ScoreProtocol.swift */; };
 		E7B2F05A208A972B009CB028 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B2F059208A972B009CB028 /* CustomTabBarController.swift */; };
+		E7F94645212DC68700AFE90C /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F94644212DC68700AFE90C /* PopUpViewController.swift */; };
+		E7F94653212E0CD300AFE90C /* PrefferedSubView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7F94652212E0CD300AFE90C /* PrefferedSubView.xib */; };
+		E7F94655212E0E1000AFE90C /* PrefferedSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F94654212E0E1000AFE90C /* PrefferedSubView.swift */; };
 		E7FF8A742096ADD7007E653D /* DraggableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF8A732096ADD7007E653D /* DraggableView.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +62,9 @@
 		E7AD560521221B9C00604123 /* BallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BallView.swift; sourceTree = "<group>"; };
 		E7AD560B2123EA3E00604123 /* ScoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreProtocol.swift; sourceTree = "<group>"; };
 		E7B2F059208A972B009CB028 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
+		E7F94644212DC68700AFE90C /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
+		E7F94652212E0CD300AFE90C /* PrefferedSubView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PrefferedSubView.xib; sourceTree = "<group>"; };
+		E7F94654212E0E1000AFE90C /* PrefferedSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefferedSubView.swift; sourceTree = "<group>"; };
 		E7FF8A732096ADD7007E653D /* DraggableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,6 +93,8 @@
 				E71C965020A5567100B2B986 /* LivePlayerView.xib */,
 				E71C965220A5573600B2B986 /* LivePlayerView.swift */,
 				E7AD560521221B9C00604123 /* BallView.swift */,
+				E7F94652212E0CD300AFE90C /* PrefferedSubView.xib */,
+				E7F94654212E0E1000AFE90C /* PrefferedSubView.swift */,
 			);
 			path = LiveGame;
 			sourceTree = "<group>";
@@ -139,12 +147,12 @@
 		E760F1602089A21B00DF9D85 /* TeamUp */ = {
 			isa = PBXGroup;
 			children = (
+				E7F94643212DC65F00AFE90C /* Settings */,
 				E74A7D6220B74B9C007FEE08 /* Classes */,
 				E74A7D5F20B74743007FEE08 /* Contracts */,
 				E74A7D5620AE3A15007FEE08 /* Helpers */,
 				E72BF5E32099654E0075329F /* LiveGame */,
 				E760F1612089A21B00DF9D85 /* AppDelegate.swift */,
-				E760F1652089A21B00DF9D85 /* SecondViewController.swift */,
 				E760F1672089A21B00DF9D85 /* Main.storyboard */,
 				E760F16A2089A21B00DF9D85 /* Assets.xcassets */,
 				E760F16C2089A21B00DF9D85 /* LaunchScreen.storyboard */,
@@ -162,6 +170,15 @@
 				E760F17A2089A21B00DF9D85 /* Info.plist */,
 			);
 			path = TeamUpTests;
+			sourceTree = "<group>";
+		};
+		E7F94643212DC65F00AFE90C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				E760F1652089A21B00DF9D85 /* SecondViewController.swift */,
+				E7F94644212DC68700AFE90C /* PopUpViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,6 +266,7 @@
 			files = (
 				E760F16E2089A21B00DF9D85 /* LaunchScreen.storyboard in Resources */,
 				E71C965120A5567100B2B986 /* LivePlayerView.xib in Resources */,
+				E7F94653212E0CD300AFE90C /* PrefferedSubView.xib in Resources */,
 				E760F16B2089A21B00DF9D85 /* Assets.xcassets in Resources */,
 				E760F1692089A21B00DF9D85 /* Main.storyboard in Resources */,
 			);
@@ -277,7 +295,9 @@
 				E7B2F05A208A972B009CB028 /* CustomTabBarController.swift in Sources */,
 				E71C965320A5573600B2B986 /* LivePlayerView.swift in Sources */,
 				E760F1642089A21B00DF9D85 /* LiveGameViewController.swift in Sources */,
+				E7F94645212DC68700AFE90C /* PopUpViewController.swift in Sources */,
 				E74A7D5A20AE3AA3007FEE08 /* UIView+Extensions.swift in Sources */,
+				E7F94655212E0E1000AFE90C /* PrefferedSubView.swift in Sources */,
 				E74A7D6120B7486C007FEE08 /* PlayerProtocol.swift in Sources */,
 				E74A7D6420B74BBE007FEE08 /* Player.swift in Sources */,
 				E7FF8A742096ADD7007E653D /* DraggableView.swift in Sources */,

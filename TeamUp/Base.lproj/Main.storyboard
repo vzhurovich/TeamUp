@@ -105,6 +105,14 @@
                                     <action selector="totalButtonPressed:" destination="9pv-A4-QxB" eventType="touchUpInside" id="1Xw-Fs-LKb"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JlW-N6-LXm">
+                                <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title=" "/>
+                                <connections>
+                                    <action selector="dimButtonPressed:" destination="9pv-A4-QxB" eventType="touchUpInside" id="wZ6-Wg-mqx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.80784313730000001" green="0.80784313730000001" blue="0.80784313730000001" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
@@ -137,14 +145,12 @@
                             <constraint firstItem="JIq-yR-Wbh" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" constant="100" id="yZq-tQ-tyo"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="PQr-Ze-W5v"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="v6q-sy-Amw" appends="YES" id="YKy-4K-iPD"/>
-                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="Live Game" image="first" id="acW-dT-cKf" userLabel="LiveGame"/>
                     <connections>
                         <outlet property="ballImageView" destination="omU-bs-Rym" id="CQd-uM-b0L"/>
                         <outlet property="benchView" destination="Jdf-f9-oLf" id="O9a-7C-ASx"/>
+                        <outlet property="dimButton" destination="JlW-N6-LXm" id="weY-RP-EJe"/>
                         <outlet property="fieldUIImageView" destination="JIq-yR-Wbh" id="BUI-EO-UgD"/>
                         <outlet property="periodButton" destination="zEI-xW-Usa" id="8W3-Sj-B5Q"/>
                         <outlet property="scoreButton" destination="1ni-Yj-I3z" id="jcW-ZD-NE6"/>
@@ -153,11 +159,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="v6q-sy-Amw">
-                    <connections>
-                        <action selector="swipeWas:" destination="9pv-A4-QxB" id="r97-Dw-4Wm"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="750" y="-320.14388489208636"/>
         </scene>
@@ -182,31 +183,17 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OgI-Oc-ynr">
-                                <rect key="frame" x="441" y="122" width="231" height="216"/>
-                                <color key="backgroundColor" red="0.55829490950000005" green="0.79128884160000001" blue="0.98010062170000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="8rJ-Kc-sve" id="Agx-pN-rSn"/>
-                                    <outlet property="delegate" destination="8rJ-Kc-sve" id="VRP-Mx-lon"/>
-                                </connections>
-                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="NDk-cv-Gan" firstAttribute="top" secondItem="zEq-FU-wV5" secondAttribute="bottom" constant="8" symbolic="YES" id="Day-4N-Vmt"/>
-                            <constraint firstItem="OgI-Oc-ynr" firstAttribute="top" secondItem="O1u-W8-tvY" secondAttribute="top" constant="102" id="GpB-Ha-7TA"/>
                             <constraint firstItem="NDk-cv-Gan" firstAttribute="centerX" secondItem="zEq-FU-wV5" secondAttribute="centerX" id="JgO-Fn-dHn"/>
-                            <constraint firstItem="OgI-Oc-ynr" firstAttribute="leading" secondItem="O1u-W8-tvY" secondAttribute="leading" constant="441" id="VHh-qG-VwK"/>
                             <constraint firstAttribute="centerX" secondItem="zEq-FU-wV5" secondAttribute="centerX" id="qqM-NS-xev"/>
                             <constraint firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" id="qzY-Ky-pLD"/>
-                            <constraint firstItem="OgI-Oc-ynr" firstAttribute="centerX" secondItem="zEq-FU-wV5" secondAttribute="centerX" id="yZV-LF-yWH"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="O1u-W8-tvY"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="second" id="cPa-gy-q4n"/>
-                    <connections>
-                        <outlet property="pickerView" destination="OgI-Oc-ynr" id="tUx-VG-Pks"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>

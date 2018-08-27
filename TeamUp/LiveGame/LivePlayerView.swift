@@ -23,8 +23,11 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
     var benchZone = CGRect(x: 30, y: 698, width: 481, height: 66)
     var fieldZone = CGRect()
     
+    var onOneTap:((LivePlayerView) -> ())?
+    
     @IBAction func tapGesture(_ sender: Any) {
         print("---TapGesture")
+        onOneTap?(self)
     }
     // MARK: WatchProtocol
     var startTime = TimeInterval()
@@ -45,7 +48,7 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.livePlayer = LivePlayer(firstName: "", secondName: "", nickName: "", isFullTimer: true, postition: .CenterForward, isOnBench: false, totalTimeOnField: 0)
+        self.livePlayer = LivePlayer(firstName: "", secondName: "", nickName: "", isFullTimer: true, postition: .CenterForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: [])
         super.init(coder: aDecoder)
 
         fromNib()
@@ -90,7 +93,7 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
     }
     
     //Mark: Bench helpers
-    private func exchangeWith(playerView: inout LivePlayerView) -> Bool {
+    public func exchangeWith(playerView: inout LivePlayerView) -> Bool {
         guard self.livePlayer.isOnBench != playerView.livePlayer.isOnBench else { return false }
         setBenchState(isOnBench: !self.livePlayer.isOnBench)
         playerView.setBenchState(isOnBench: !playerView.livePlayer.isOnBench)

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PrefferedSubView" customModule="TeamUp" customModuleProvider="target">
+            <connections>
+                <outlet property="okButton" destination="4aJ-M9-bkN" id="ota-wH-2dS"/>
+                <outlet property="pickerView" destination="XRd-ar-rcO" id="c7P-Y1-G0h"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRd-ar-rcO">
+                    <rect key="frame" x="0.0" y="0.0" width="150" height="120"/>
+                    <color key="backgroundColor" red="0.80784313730000001" green="0.80784313730000001" blue="0.80784313730000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Sr6-XC-NsB"/>
+                        <outlet property="delegate" destination="-1" id="T08-mJ-alK"/>
+                    </connections>
+                </pickerView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4aJ-M9-bkN">
+                    <rect key="frame" x="0.0" y="120" width="150" height="30"/>
+                    <state key="normal" title="OK"/>
+                    <connections>
+                        <action selector="okButtonPressed:" destination="-1" eventType="touchUpInside" id="h1r-qO-RvA"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="4aJ-M9-bkN" firstAttribute="leading" secondItem="XRd-ar-rcO" secondAttribute="leading" id="EcE-CG-4DQ"/>
+                <constraint firstItem="XRd-ar-rcO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="JdR-Kw-5TQ"/>
+                <constraint firstItem="4aJ-M9-bkN" firstAttribute="top" secondItem="XRd-ar-rcO" secondAttribute="bottom" id="QU6-kB-tzv"/>
+                <constraint firstItem="4aJ-M9-bkN" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Qf2-PW-GPW"/>
+                <constraint firstAttribute="trailing" secondItem="4aJ-M9-bkN" secondAttribute="trailing" id="Zvn-CW-2HK"/>
+                <constraint firstItem="4aJ-M9-bkN" firstAttribute="trailing" secondItem="XRd-ar-rcO" secondAttribute="trailing" id="h4N-EI-top"/>
+                <constraint firstItem="4aJ-M9-bkN" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="orW-dV-6eP"/>
+                <constraint firstItem="4aJ-M9-bkN" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="120" id="pid-53-M6w"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+        </view>
+    </objects>
+</document>

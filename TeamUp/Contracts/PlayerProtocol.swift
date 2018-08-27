@@ -48,7 +48,7 @@ public enum FieldPosition: Int {
 public protocol PlayerProtocol {
     var firstName: String { get }
     var secondName: String { get }
-    var nickName: String? { get }
+    var nickName: String { get }
 }
 
 public protocol SeasonPlayerProtocol: PlayerProtocol {
@@ -59,4 +59,5 @@ public protocol LivePlayerProtocol: SeasonPlayerProtocol {
     var postition: FieldPosition { get }
     var isOnBench: Bool { get set }
     var totalTimeOnField: TimeInterval { get set }
+    var prefferedSubs: [String] { get set }
 }

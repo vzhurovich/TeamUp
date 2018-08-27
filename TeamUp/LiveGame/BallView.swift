@@ -36,7 +36,7 @@ class BallView: UIImageView, DraggableViewProtocol {
     }
     
     // MARK: Private
-    private func animateGoal(weScore: Bool, onCompletion: @escaping (CompletionStatus)->()) {
+    public func animateGoal(weScore: Bool, onCompletion: @escaping (CompletionStatus)->()) {
         let goalCenter = weScore ? theirGoalCenter : ourGoalCenter
         UIView.animate(withDuration: 0.5, animations: { [weak self, goalCenter] in
             guard let strongSelf = self else {
