@@ -81,14 +81,14 @@
                                 <rect key="frame" x="685" y="488" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Torpedo Gopota" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMb-KF-m1y">
-                                <rect key="frame" x="307" y="57" width="187" height="33"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Torpedo Gopota" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMb-KF-m1y">
+                                <rect key="frame" x="339.5" y="57" width="154.5" height="33"/>
                                 <fontDescription key="fontDescription" name="KohinoorBangla-Semibold" family="Kohinoor Bangla" pointSize="21"/>
                                 <color key="textColor" red="0.17254901959999999" green="0.42352941179999998" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RSC" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IQ9-Gh-gWT">
-                                <rect key="frame" x="617" y="57" width="37" height="33"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="En Fuego" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IQ9-Gh-gWT">
+                                <rect key="frame" x="617" y="57" width="112" height="33"/>
                                 <fontDescription key="fontDescription" name="KohinoorBangla-Semibold" family="Kohinoor Bangla" pointSize="21"/>
                                 <color key="textColor" red="0.21176470589999999" green="0.48627450979999998" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -99,7 +99,7 @@
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cI2-UT-v71">
-                                <rect key="frame" x="942" y="67" width="139" height="30"/>
+                                <rect key="frame" x="907" y="67" width="174" height="30"/>
                                 <state key="normal" title="Current"/>
                                 <connections>
                                     <action selector="totalButtonPressed:" destination="9pv-A4-QxB" eventType="touchUpInside" id="1Xw-Fs-LKb"/>
@@ -132,7 +132,7 @@
                             <constraint firstItem="hvs-Ef-C4p" firstAttribute="top" secondItem="zEI-xW-Usa" secondAttribute="bottom" id="a3r-Ca-6fV"/>
                             <constraint firstItem="JIq-yR-Wbh" firstAttribute="top" secondItem="fQl-nD-b82" secondAttribute="bottom" constant="5" id="bWI-B5-hcL"/>
                             <constraint firstItem="JIq-yR-Wbh" firstAttribute="top" secondItem="cI2-UT-v71" secondAttribute="bottom" constant="3" id="bY1-n7-OdQ"/>
-                            <constraint firstItem="cI2-UT-v71" firstAttribute="leading" secondItem="IQ9-Gh-gWT" secondAttribute="trailing" constant="288" id="bgC-qo-NQe"/>
+                            <constraint firstItem="cI2-UT-v71" firstAttribute="leading" secondItem="IQ9-Gh-gWT" secondAttribute="trailing" constant="200" id="bgC-qo-NQe"/>
                             <constraint firstItem="6Iv-cP-bpx" firstAttribute="top" secondItem="1ni-Yj-I3z" secondAttribute="top" id="dDM-W0-Fdp"/>
                             <constraint firstItem="fQl-nD-b82" firstAttribute="top" secondItem="1ni-Yj-I3z" secondAttribute="bottom" id="fUB-o2-uCL"/>
                             <constraint firstItem="CMb-KF-m1y" firstAttribute="top" secondItem="PQr-Ze-W5v" secondAttribute="top" constant="37" id="fYY-6J-fFm"/>

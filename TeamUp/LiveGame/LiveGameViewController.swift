@@ -48,7 +48,7 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
     private let theirGoalCenter = CGPoint(x: 975.5, y: 400)
     private let ourGoalCenter = CGPoint(x: 47, y: 400)
     private let ourGoalZone = CGRect(x: 66, y: 240, width: 134, height: 320)
-    private let benchZone = CGRect(x: 30, y: 698, width: 581, height: 66)
+    private let benchZone = CGRect(x: 30, y: 698, width: 681, height: 66)
     
     // WatchProtocol
     var startTime = TimeInterval()
@@ -138,7 +138,7 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
             let newCenterPoint = CGPoint(x: draggedView.center.x + translation.x, y: draggedView.center.y + translation.y)
             if draggableView.isAllowedMovementTo(newCenterPoint: newCenterPoint) {
                 draggedView.center = newCenterPoint
-                print ("*** newCenterPoint = \(newCenterPoint)")
+//                print ("*** newCenterPoint = \(newCenterPoint)")
                 sender.setTranslation(CGPoint.zero, in: self.view)
             }
         }
@@ -186,9 +186,10 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
             guard let strongSelf = self else { return }
             var touchedLivePlayer = touchedLivePlayer
             strongSelf.hidePrefferedSubView(true)
-            if selectedName == "⚽️" {
-                strongSelf.ballImageView.animateGoal(weScore: true, onCompletion: { _ in
-                    strongSelf.goal(our: true)
+            if selectedName == "⚽️" || selectedName == "-⚽️" {
+                let weScore = selectedName == "⚽️" ? true : false
+                strongSelf.ballImageView.animateGoal(weScore: weScore, onCompletion: { _ in
+                    strongSelf.goal(our: weScore)
                     strongSelf.updateScore()
                 })
             } else {
@@ -231,6 +232,8 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
     private func updateScore() {
         let scoreString = String(ourGoals) + " : " + String(theirGoals)
         scoreButton.setTitle(scoreString, for: .normal)
+
+        panGeaasureRecognizers.keys.flatMap{ $0.view as? LivePlayerView}.first(where: {$0.livePlayer.postition == .Keeper })?.updateKeepFaceOnScore(difference: Int8(ourGoals) - Int8(theirGoals))
     }
     
     // MARK: Timer
@@ -278,13 +281,15 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
             playerView.allowedAreaFrame = CGRect(origin: fieldUIImageView.frame.origin, size: size)
             let fieldSize = CGSize(width: self.view.frame.width - 31 - 31, height: self.view.frame.height - 100 - 74)
             playerView.fieldZone = CGRect(origin: fieldUIImageView.frame.origin, size: fieldSize)
+            playerView.benchZone = benchZone
             playerView.updateLastCenterPoint()
             playerView.addGestureRecognizer(panGesture)
             playerView.onOneTap = { [weak self] livePlayerView in
                 guard let strongSelf = self else { return }
                 let prefferedSubs:[String] = strongSelf.panGeaasureRecognizers.keys.flatMap{ $0.view as? LivePlayerView}.filter({ ($0.livePlayer.isOnBench != livePlayerView.livePlayer.isOnBench) && livePlayerView.livePlayer.prefferedSubs.contains($0.livePlayer.nickName) }).sorted(by: { $0.currentETime < $1.currentETime }).flatMap{ $0.livePlayer.nickName } 
                 strongSelf.prefferedSubView.setTouchedLivePlayerView(livePlayerView, prefferedSubs: prefferedSubs)
-                strongSelf.prefferedSubView.center = CGPoint(x: livePlayerView.center.x - 2.5, y: livePlayerView.center.y + 30)
+                let yOffset: CGFloat = livePlayerView.livePlayer.isOnBench ? -50 : 30
+                strongSelf.prefferedSubView.center =  CGPoint(x: livePlayerView.center.x - 2.5, y: livePlayerView.center.y + yOffset)
                 strongSelf.hidePrefferedSubView(false)
             }
             self.view.addSubview(playerView)
@@ -305,24 +310,29 @@ class LiveGameViewController: UIViewController, WatchProtocol, ScoreProtocol {
         var livePlayers: [LivePlayer] = []
         livePlayers.append(LivePlayer(firstName: "Dima", secondName: "Dima", nickName: "Dimas", isFullTimer: true, postition: .Keeper, isOnBench: false, totalTimeOnField: 0, prefferedSubs: []))
         // Right Deff
-        livePlayers.append(LivePlayer(firstName: "Vitaliy", secondName: "Fedonkin", nickName: "Vitaliy", isFullTimer: true, postition: .RightDef, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["Dima"]))
-        livePlayers.append(LivePlayer(firstName: "Dima", secondName: "Kabish", nickName: "Dima", isFullTimer: true, postition: .RightDef, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Vitaliy"]))
+        livePlayers.append(LivePlayer(firstName: "Mykola", secondName: "Pavliuchenkov", nickName: "Kolya", isFullTimer: true, postition: .RightDef, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["DimaK"]))
+
+        livePlayers.append(LivePlayer(firstName: "Dima", secondName: "Kabish", nickName: "DimaK", isFullTimer: true, postition: .RightDef, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Kolya"]))
         
         // Left Deff
         livePlayers.append(LivePlayer(firstName: "Yura", secondName: "Burkanov", nickName: "Yura", isFullTimer: true, postition: .LeftDef, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["ZhenyaM"]))
         livePlayers.append(LivePlayer(firstName: "Evgeny", secondName: "Melikhov", nickName: "ZhenyaM", isFullTimer: true, postition: .LeftDef, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Yura"]))
         
         // Center
-        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Petrov", nickName: "SeregaP", isFullTimer: true, postition: .CenterForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["Oleg","Volodya","SeregaB"]))
-        livePlayers.append(LivePlayer(firstName: "Oleg", secondName: "Pauchkov", nickName: "Oleg", isFullTimer: true, postition: .CenterForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["SeregaP","Volodya","SeregaB"]))
+        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Petrov", nickName: "SeregaP", isFullTimer: true, postition: .CenterForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["Oleg"]))
+        livePlayers.append(LivePlayer(firstName: "Oleg", secondName: "Pauchkov", nickName: "Oleg", isFullTimer: true, postition: .CenterForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["SeregaP"]))
         
         // Right Forward
-        livePlayers.append(LivePlayer(firstName: "Vladimir", secondName: "Zhurovich", nickName: "Volodya", isFullTimer: true, postition: .RightForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["SeregaB"]))
-        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Balabanov", nickName: "SeregaB", isFullTimer: true, postition: .RightForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Volodya"]))
+        livePlayers.append(LivePlayer(firstName: "Vitaliy", secondName: "Fedonkin", nickName: "Vitaliy", isFullTimer: true, postition: .RightForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["Genghis","Volodya"]))
+        livePlayers.append(LivePlayer(firstName: "Neno", secondName: "Neno", nickName: "Neno", isFullTimer: true, postition: .RightForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Vitaliy"]))
+        
+//        livePlayers.append(LivePlayer(firstName: "Serega", secondName: "Balabanov", nickName: "SeregaB", isFullTimer: true, postition: .RightForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Volodya"]))
         
         // Left Forward
-        livePlayers.append(LivePlayer(firstName: "Leonid", secondName: "Konyaev", nickName: "Lenya", isFullTimer: true, postition: .LeftForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["Genghis"]))
-        livePlayers.append(LivePlayer(firstName: "Genghis", secondName: "Karimov", nickName: "Genghis", isFullTimer: true, postition: .LeftForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Lenya"]))
+//        livePlayers.append(LivePlayer(firstName: "Leonid", secondName: "Konyaev", nickName: "Lenya", isFullTimer: true, postition: .LeftForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["Genghis"]))
+        livePlayers.append(LivePlayer(firstName: "Genghis", secondName: "Karimov", nickName: "Genghis", isFullTimer: true, postition: .LeftForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Volodya"]))
+        livePlayers.append(LivePlayer(firstName: "Vladimir", secondName: "Zhurovich", nickName: "Volodya", isFullTimer: true, postition: .LeftForward, isOnBench: false, totalTimeOnField: 0, prefferedSubs: ["Genghis"]))
+//        livePlayers.append(LivePlayer(firstName: "Genghis", secondName: "Karimov", nickName: "Genghis", isFullTimer: true, postition: .LeftForward, isOnBench: true, totalTimeOnField: 0, prefferedSubs: ["Lenya"]))
         
         //        livePlayers.append(LivePlayer(firstName: "Yevgenie", secondName: "Goldenberg", nickName: "Zhenya", isFullTimer: true, postition: .CenterForward, isOnBench: false))
         

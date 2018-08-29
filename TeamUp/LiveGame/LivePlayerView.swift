@@ -18,9 +18,10 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
     var livePlayer: LivePlayerProtocol
     let fieldPlayerFaces = ["smileFace","hungryFace","crazyFace"]
     let benchPlayerFaces = ["greenSmily","shockFace","angryRed"]
+
     var showTotalTimeOnField: Bool = false
     var currentETime: TimeInterval = 0
-    var benchZone = CGRect(x: 30, y: 698, width: 481, height: 66)
+    var benchZone = CGRect(x: 30, y: 698, width: 681, height: 66)
     var fieldZone = CGRect()
     
     var onOneTap:((LivePlayerView) -> ())?
@@ -63,7 +64,15 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
     func updateTime() {
         let currentTimeOnField = livePlayer.isOnBench ? 0 : currentETime
         let totalTime = self.timeIntervalToString(time: livePlayer.totalTimeOnField + currentTimeOnField)
-        timeLabel.text = showTotalTimeOnField ? totalTime : timeText()
+        timeLabel.text = showTotalTimeOnField ? totalTime : timeTextOrCurrentETime()
+    }
+    
+    func timeTextOrCurrentETime() -> String {
+        if timeFromStart == nil {
+            return timeText()
+        } else {
+            return self.timeIntervalToString(time: currentETime)
+        }
     }
     
     // DraggableViewProtocol
@@ -142,14 +151,33 @@ class LivePlayerView: UIView, WatchProtocol, DraggableViewProtocol {
         timeLabel.layer.cornerRadius = 5.0
         nameLabel.text = livePlayer.nickName
         updateFaceImage(index: 0)
-        doActionOnTime = { [weak self] ( timeInterval ) in
-            guard let strongSelf = self, let indx = strongSelf.triggerTimeIntervals.index(of: timeInterval) else { return }
-            strongSelf.updateFaceImage(index: indx)
+        if (livePlayer.postition != .Keeper) {
+            doActionOnTime = { [weak self] ( timeInterval ) in
+                guard let strongSelf = self, let indx = strongSelf.triggerTimeIntervals.index(of: timeInterval) else { return }
+                strongSelf.updateFaceImage(index: indx)
+            }
         }
     }
     
     private func updateFaceImage(index: Int) {
         let imageName = self.livePlayer.isOnBench ? self.benchPlayerFaces[index] : self.fieldPlayerFaces[index]
+        self.faceImageView.image = UIImage(named:imageName)
+    }
+    
+    public func updateKeepFaceOnScore(difference: Int8)
+    {
+        guard livePlayer.postition == .Keeper else { return }
+        var imageName = "keepInitial"
+        switch(difference) {
+        case 0 :
+            imageName = "keepInitial"
+        case -1 :
+            imageName = "keepMinus1"
+        case -2 :
+            imageName = "keepMinus2"
+        default:
+            imageName = (difference < -2) ? "keepMinus3":"smileFace"
+        }
         self.faceImageView.image = UIImage(named:imageName)
     }
 

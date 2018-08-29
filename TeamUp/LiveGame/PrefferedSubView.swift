@@ -38,6 +38,9 @@ class PrefferedSubView: UIView , UIPickerViewDelegate, UIPickerViewDataSource {
         self.touchedLivePlayerView = touchedLivePlayerView
         arraySubs = prefferedSubs //touchedLivePlayerView.livePlayer.prefferedSubs
         arraySubs.append("⚽️")
+        if touchedLivePlayerView.livePlayer.postition == .Keeper {
+            arraySubs.insert("-⚽️", at: 0)
+        }
         lastSelection = arraySubs.count > 2 ? 1 : 0
         pickerView.selectRow(lastSelection, inComponent: 0, animated: false)
         
